@@ -13,7 +13,7 @@ Hello, I am Shangyx.
 This is my personal blog via GitHub Pages.
 
 如果您对我的文章有任何疑问，或者发现文章中存在错误，可以通过邮件与我联系。
-If you have any questions about my article or find any error in my article, please contact me by email.
+If you have any questions about my article or find any error in my article, please contact me by email LRiyuan007919@163.com.
 
 ## 版权声明
 

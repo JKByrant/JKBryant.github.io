@@ -1,8 +1,8 @@
 name: "Shangyx's blog"
 description: "上官云霄的个人博客"
 
-avatar: https://JKBryant.github.io/images/avatar.png
-favicon: https://JKBryant.github.io/images/favicon.ico
+avatar: https://jkbryant.github.io/images/avatar.png
+favicon: https://jkbryant.github.io/images/favicon.ico
 
 navigation:
   - name: 首页
@@ -27,7 +27,7 @@ footer-links:
 
 footer-text: Copyright (c) 2024 Shangyx
 
-url: https://JKBryant.github.io
+url: https://jkbryant.github.io
 
 permalink: /:title/
 paginate_path: /page:num/
