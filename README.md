@@ -1,3 +1,3 @@
-# JKBryant.github.io
+# Shanggyx.github.io
 
 My Personal Blog via GitHub

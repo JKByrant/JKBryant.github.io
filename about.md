@@ -7,7 +7,7 @@ permalink: /about/
 ## 关于我
 
 您好，我是上官云霄。
-Hello, I am Shangyx.
+Hello, I am Shanggyx.
 
 这是我基于 GitHub Pages 平台创建的个人博客。
 This is my personal blog via GitHub Pages.
