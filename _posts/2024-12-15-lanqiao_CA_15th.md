@@ -19,22 +19,22 @@ author: Shanggyx
 
 给定一个长度为 $n$ 的正整数数组 $a$，求有多少个四元组 $(i, j, k, l)$ 满足 $(a_i, a_j) \mid (a_k, a_l)$ 且 $i, j, k, l$ 互不相同。
 
-- 其中 $(a_i, a_j) \mid (a_k, a_l)$ 表示 $a_i \mid a_k$ 且 $a_j \mid a_l$；
-- $x \mid y$ 表示 $x$ 整除 $y$，例如 $2 \mid 4$；
+- 其中 $(a_i, a_j) \mid (a_k, a_l)$ 表示 $a_i \mid a_k$ 且 $a_j \mid a_l$;
+- $x \mid y$ 表示 $x$ 整除 $y$，例如 $2 \mid 4$.
 
 #### 数据范围
 
-- $1 \leq n, a_i \leq 10^5$。
+- $1 \leq n, a_i \leq 10^5$.
 
 #### Solution
 
 这题很明显是一道容斥。在满足 $(a_i, a_j) \mid (a_k, a_l)$ 的基础上，我们令 $ABCDE$ 分别表示以下几个四元组。
 
-- $A$ 表示 $i \neq k$ 且 $j \neq l$；
-- $B$ 表示 $i = j$；
-- $C$ 表示 $i = l$；
-- $D$ 表示 $j = k$；
-- $E$ 表示 $k = l$。
+- $A$ 表示 $i \neq k$ 且 $j \neq l$;
+- $B$ 表示 $i = j$;
+- $C$ 表示 $i = l$;
+- $D$ 表示 $j = k$;
+- $E$ 表示 $k = l$.
 
 那么题目要求的答案就是 
 
@@ -93,7 +93,7 @@ $$
 对于 $ACD$ 来说，它产生的四元组是 $(i,j,j,i)$，而要求是 $a_i \mid a_j$ 且 $a_j \mid a_i$，因此一定有 $a_i = a_j$。所以这种情况的答案就是 
 
 $$
-\sum\limits{cnt[x] \choose 2} = \sum\limits\frac{cnt[x](cnt[x] - 1)}{2}.
+\sum\limits cnt[x] \times (cnt[x] - 1).
 $$
 
 ##### 接着是 $AB$ 这一行。
@@ -122,7 +122,7 @@ $$
 我们会发现这种要求都是以一个中间数 $x$ 为媒介，左右各是 $x$ 的因数和倍数。那么这种情况的答案就是
 
 $$
-\sum\limits cnt[x] \times fac[x] \times mul[x] \times 2
+\sum\limits cnt[x] \times fac[x] \times mul[x] \times 2.
 $$
 
 ##### 最后回到 $A$。
@@ -130,7 +130,7 @@ $$
 $A$ 的计算就很简单了，只要 $i \neq k$ 且 $j \neq l$，这就相当于 $ABE$ 对应的 $(i,i,k,k)$ 的答案的平方，即
 
 $$
-\sum\limits (cnt[x] \times mul[x])^2
+\sum\limits (cnt[x] \times mul[x])^2.
 $$
 
 ##### 综上所述。
@@ -143,7 +143,7 @@ ans =& \sum\limits_{x = 1}^{\max(a)}(cnt[x] \times mul[x])^2 + (cnt[x] \times mu
 &- cnt[x] \times mul[x] \times mul[x] \\
 &- cnt[x] \times fac[x] \times fac[x] \\
 &- cnt[x] \times fac[x] \times mul[x] \\
-&+ \frac{cnt[x](cnt[x] - 1)}{2}
+&+ cnt[x] \times (cnt[x] - 1).
 \end{align*}
 $$
 
