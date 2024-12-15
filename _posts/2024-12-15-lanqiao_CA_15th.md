@@ -9,9 +9,9 @@ author: Shanggyx
 
 ### [真题链接](https://www.lanqiao.cn/paper/)
 
-篮球杯官网现在支持 `C++17`，正式赛不知道是不是还是 `C++11`。
-
 <!-- more -->
+
+篮球杯官网现在支持 `C++17`，正式赛不知道是不是还是 `C++11`。
 
 #### [因数计数](https://www.lanqiao.cn/problems/19706/learning/) 
 
