@@ -11,6 +11,8 @@ author: Shanggyx
 
 篮球杯官网现在支持 `C++17`，正式赛不知道是不是还是 `C++11`。
 
+<!-- more -->
+
 #### [因数计数](https://www.lanqiao.cn/problems/19706/learning/) 
 
 这是比赛里的第四个编程题。
