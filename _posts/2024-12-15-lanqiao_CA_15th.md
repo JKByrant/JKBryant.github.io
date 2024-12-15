@@ -13,22 +13,22 @@ author: Shanggyx
 
 篮球杯官网现在支持 `C++17`，正式赛不知道是不是还是 `C++11`。
 
-#### [因数计数](https://www.lanqiao.cn/problems/19706/learning/) 
+### [因数计数](https://www.lanqiao.cn/problems/19706/learning/) 
 
 这是比赛里的第四个编程题。
 
-#### 题目大意
+### 题目大意
 
 给定一个长度为 $n$ 的正整数数组 $a$，求有多少个四元组 $(i, j, k, l)$ 满足 $(a_i, a_j) \mid (a_k, a_l)$ 且 $i, j, k, l$ 互不相同。
 
 - 其中 $(a_i, a_j) \mid (a_k, a_l)$ 表示 $a_i \mid a_k$ 且 $a_j \mid a_l$;
 - $x \mid y$ 表示 $x$ 整除 $y$，例如 $2 \mid 4$.
 
-#### 数据范围
+### 数据范围
 
 - $1 \leq n, a_i \leq 10^5$.
 
-#### Solution
+### Solution
 
 这题很明显是一道容斥。在满足 $(a_i, a_j) \mid (a_k, a_l)$ 的基础上，我们令 $ABCDE$ 分别表示以下几个四元组。
 
@@ -153,11 +153,11 @@ $$
 
 注意这题需要开 `__int128`。
 
-#### 时间复杂度 $\mathcal{O}(n + V\log V)$
+### 时间复杂度 $\mathcal{O}(n + V\log V)$
 
 - 其中 $V = \max(a)$。
 
-#### C++ Code
+### C++ Code
 
 ```cpp
 #include <bits/stdc++.h>

@@ -46,6 +46,13 @@ kramdown:
     # Use existing pygments syntax highlighting css
     css_class: 'highlight'
 
+codeblock:
+  highlight_theme: night eighties		# 高亮代码块的主题风格，有五种选择，请看下面表格
+  copy_button:		
+    enable: true				# 是否使用复制按钮
+    show_result: true				# 实现复制结果，一般是`复制成功`
+    style:
+
 # Set the Sass partials directory, as we're using @imports
 sass:
   style: :expanded # You might prefer to minify using :compressed
