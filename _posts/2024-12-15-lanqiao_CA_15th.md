@@ -144,7 +144,7 @@ $$
 ans =& \sum\limits_{x = 1}^{\max(a)}(cnt[x] \times mul[x])^2 + (cnt[x] \times mul[x]) \\
 &- cnt[x] \times mul[x] \times mul[x] \\
 &- cnt[x] \times fac[x] \times fac[x] \\
-&- cnt[x] \times fac[x] \times mul[x] \\
+&- cnt[x] \times fac[x] \times mul[x] \times 2 \\
 &+ cnt[x] \times (cnt[x] - 1).
 \end{align*}
 $$
