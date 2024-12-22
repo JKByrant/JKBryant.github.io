@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "CaDA: Cross-Problem Routing Solver with Constraint-Aware Dual-Attention"
-date:   2024-12-21
+date:   2024-12-22
 tags: [VRP, Attention]
 comments: true
 author: Shanggyx
@@ -33,18 +33,18 @@ author: Shanggyx
     - 开放路线（$O$）：车辆完成子路线后不返回仓库。
     - 时间窗口（$TW$）：节点必须在特定时间窗口内被访问，车辆需考虑服务时间和时间限制。
     - 回程（$B$）：客户分为送货（linehaul）和取货（backhaul）两类，送货任务需在取货任务前完成。
-    - 持续时间限制（$L$）：每个子路线必须在规定长度内完成，确保车辆能在阈值内返回仓库。
+    - 子路径长度限制（$L$）：每个子路线必须在规定长度内完成，确保车辆能在阈值内返回仓库。
 
 ### 学习构建 VRP 解决方案
 
 1. 建模为 $MDP$：将 VRP 解决方案的构建过程建模为 MDP，然后用强化学习生成策略。
-2. 策略模型：采用基于神经网络的策略 $\pi_{\theta}$，参数为 $\theta$，通过学习生成解决方案。策略的概率分布通过自回归方式计算，即 $$\pi_{\theta}(\tau \mid V) = \prod\limits_{t = 1}^{T} \pi_{\theta}(a_t \mid s_t) = \prod\limits_{t = 1}^{T}\pi_{\theta}(\tau_t \mid \tau_{t - 1},V).$$
+2. 策略模型：采用基于神经网络的策略 $\pi_{\theta}$，参数为 $\theta$，通过学习生成解决方案。策略的概率分布通过自回归方式计算，即 <div align=center>$$\pi_{\theta}(\tau \mid V) = \prod\limits_{t = 1}^{T} \pi_{\theta}(a_t \mid s_t) = \prod\limits_{t = 1}^{T}\pi_{\theta}(\tau_t \mid \tau_{t - 1},V).$$</div>
 3. 奖励函数：当生成完整可行解 $\tau_T$ 时，获得奖励 $r(\tau_T) = -\sum\limits_{t = 1}^{T - 1}d_{\tau_t\tau_{t + 1}}$，模型通过强化学习方法优化策略，以最大化预期奖励。
 
 ### Transformer 层
 
-1. 注意力层（Attention Layer）：采用经典的多头注意力机制，通过计算 $query$、$key$ 和 $value$ 之间的注意力分数，对输入进行加权求和，实现对不同节点信息的关注和融合。注意力函数为 $$\begin{align*}Attention(X,Y) = A(YW_v), \\ A = Softmax(\frac{XW_Q(YW_k)^T}{\sqrt{d_k}}).\end{align*}$$
-2. 门控线性单元（Gated Linear Unit）：在 Transformer 块中，使用 SwiGLU 作为前馈网络的激活函数，替代传统的 ReLU 激活函数，以提高模型的表达能力。SwiGLU 定义为 $$SwiGLU(X) = X \odot \sigma(XW_1 + b_1) \otimes SiLU(XW_2 + b_2).$$ 其中 $\odot$ 是点乘，$\otimes$ 是矩阵乘，$\sigma$ 是 sigmoid 函数，$W_1, W_2, b_1, b_2$ 是可学习参数。
+1. 注意力层（Attention Layer）：采用经典的多头注意力机制，通过计算 $query$、$key$ 和 $value$ 之间的注意力分数，对输入进行加权求和，实现对不同节点信息的关注和融合。注意力函数为 <div align=center>$$\begin{align*}Attention(X,Y) = A(YW_v), \\ A = Softmax(\frac{XW_Q(YW_k)^T}{\sqrt{d_k}}).\end{align*} \\ $$</div>
+2. 门控线性单元（Gated Linear Unit）：在 Transformer 块中，使用 SwiGLU 作为前馈网络的激活函数，替代传统的 ReLU 激活函数，以提高模型的表达能力。SwiGLU 定义为 <div align=center>$$SwiGLU(X) = X \odot \sigma(XW_1 + b_1) \otimes SiLU(XW_2 + b_2). \\ $$</div> 其中 $\odot$ 是点乘，$\otimes$ 是矩阵乘，$\sigma$ 是 sigmoid 函数，$W_1, W_2, b_1, b_2$ 是可学习参数。
 
 
 ## 三、实验过程
@@ -59,22 +59,22 @@ CaDA 遵循 VRP 的跨问题学习框架，包括编码和解码两个阶段。�
 
 ### 约束提示（Constraint Prompt）
 
-1. 生成提示向量：将 VRP 问题表示为一个对应五种约束的多热向量 $V \in \mathbb{R}^5$，然后通过多层感知机（$MLP$）处理生成提示 $P^{(0)}$，即 $$P^{(0)} = LayerNorm((VW_a + b_a) + W_b + b_b,$$ 其中 $W_a \in \mathbb{R}^{5 \times d_h}, b_a \in \mathbb{R}^{d_h}, W_b \in \mathbb{R}^{d_h \times d_h}, b_b \in \mathbb{R}^{d_h}$ 为可学习参数，$d_h$ 为节点嵌入维度。
+1. 生成提示向量：将 VRP 问题表示为一个对应五种约束的多热向量 $V \in \mathbb{R}^5$，然后通过多层感知机（$MLP$）处理生成提示 $P^{(0)}$，即 <div align=center>$$P^{(0)} = LayerNorm((VW_a + b_a) + W_b + b_b, \\ $$</div> 其中 $W_a \in \mathbb{R}^{5 \times d_h}, b_a \in \mathbb{R}^{d_h}, W_b \in \mathbb{R}^{d_h \times d_h}, b_b \in \mathbb{R}^{d_h}$ 为可学习参数，$d_h$ 为节点嵌入维度。
 2. 与节点嵌入结合：将生成的提示 $P^{(0)}$ 与节点嵌入 $H^{(0)}$ 进行拼接，以便在后续处理中引入约束信息。
 
 ### 双注意力机制（Dual-Attention Mechanism）
 
 1. 全局分支（Global Branch）
-    - 节点嵌入初始化：将输入实例 $V$ 通过线性投影转换为高维初始节点嵌入 $H^{(0)} \in \mathbb{R}^{(N + 1) \times d_h}$，这里 $|V| = N + 1$。
+    - 节点嵌入初始化：将输入实例 $V$ 通过线性投影转换为高维初始节点嵌入 $H^{(0)} \in \mathbb{R}^{(N + 1) \times d_h}$。
     - 多层处理：全局分支由 $L$ 层组成，每层包含标准多头注意力层（MHA）和 SwiGLU 激活函数。在第 $i$ 层，节点嵌入 $H_g^{(i - 1)}$ 与提示 $P^{(i - 1)}$ 拼接后，经过 MHA 和 SwiGLU 处理，并通过残差连接和 RMSNorm 进行归一化，更新节点嵌入为 $\widetilde{H}_g^{(i)}$ 和提示为 $P^{(i)}$。
 2. 稀疏分支（Sparse Branch）
-    - 注意力层替换：稀疏分支同样由 $L$ 层组成，但在注意力层中，使用 Top-k 稀疏注意力（SparseAtt）替代标准注意力，通过将小于 Top-k 分数的注意力值设为零，使模型聚焦于最相关的节点。SparseAtt 定义为 $$SparseAtt(X,Y) = Softmax(M(A))YW_V,$$ 其中 $M(\cdot)$ 为 Top-k 选择操作，它选择每行注意力分数中的前 $k$ 个最高值，其余设为零。
+    - 注意力层替换：稀疏分支同样由 $L$ 层组成，但在注意力层中，使用 Top-k 稀疏注意力（SparseAtt）替代标准注意力，通过将小于 Top-k 分数的注意力值设为零，使模型聚焦于最相关的节点。SparseAtt 定义为 <div align=center>$$SparseAtt(X,Y) = Softmax(M(A))YW_V, \\ $$</div> 其中 $M(\cdot)$ 为 Top-k 选择操作，它选择每行注意力分数中的前 $k$ 个最高值，其余设为零。
     - 信息融合：在每层结束时，通过简单线性投影将全局分支和稀疏分支的信息进行融合（即 $g$ 用 $s$ 更新，$s$ 用 $g$ 更新），得到更新后的节点嵌入 $H_g^{(i)}$ 和 $H_s^{(i)}$。
 
 ### 解码器（Decoder）
 
 1. 上下文嵌入计算：在解码阶段，利用全局分支输出的节点嵌入 $H^{(L)} = [h_0^{(L)}, h_1^{(L)}, \cdots, h_N^{(L)}]$ 构建解决方案。在每个解码步骤 $t$，根据已生成的部分解 $\tau_t$ 和当前状态信息（如车辆剩余容量、当前时间、剩余路线长度、开放路线指示等）计算上下文嵌入 $H_c$。
-2. 动作选择：上下文嵌入 $H_c$ 通过 MHA 生成最终查询 $q_c$，然后计算每个可行动作的兼容性得分 $u_i$，公式为 $$u_i = \begin{cases}\xi \cdot tanh\left( \frac{q_c(h_i^{(L)})^T}{\sqrt{d_k}}\right) \ &if \ \ i \in I_t \\ -\infty &otherwise\end{cases},$$ 再通过 Softmax 函数得到动作概率 $$\pi_{\theta}(\tau_g = i \mid V, \tau_{1: g - 1}).$$ 在计算动作概率时，需根据 VRP 的约束条件确定可行动作集合 $I_t$，具体规则如下：
+2. 动作选择：上下文嵌入 $H_c$ 通过 MHA 生成最终查询 $q_c$，然后计算每个可行动作的兼容性得分 $u_i$，公式为 <div align=center>$$u_i = \begin{cases}\xi \cdot tanh\left( \frac{q_c(h_i^{(L)})^T}{\sqrt{d_k}}\right) \ &if \ \ i \in I_t \\ -\infty &otherwise\end{cases}, \\ $$</div> 再通过 Softmax 函数得到动作概率 <div align=center>$$\pi_{\theta}(\tau_g = i \mid V, \tau_{1: g - 1}). \\ $$</div> 在计算动作概率时，需根据 VRP 的约束条件确定可行动作集合 $I_t$，具体规则如下：
     - 每个客户节点只能被访问一次，若仓库是部分解的最后一个动作，则下一个动作不能是仓库，以避免自环。
     - 对于无开放路线约束的问题，每个子路线需在规定限制内返回仓库，涉及时间窗口约束（有时间限制 ）和距离限制约束（有距离限制 ），若不满足相应条件，则节点不可用。
     - 对于有时间窗口约束的问题，车辆必须在客户节点的时间窗口内访问并完成服务，否则节点不可用。
@@ -89,7 +89,7 @@ CaDA 遵循 VRP 的跨问题学习框架，包括编码和解码两个阶段。�
 - 节点位置：节点位置由二维向量 $\vec{X}_i$ 表示，其值从均匀分布 $U(0, 1)$ 中采样得到。
 - 车辆容量：仅考虑同构车辆，即所有车辆共享相同容量 $c$。在节点数量 $N = 50$ 时，容量 $c$ 设为 $40$；$N = 100$ 时，$c$ 设为 $50$。车辆数量无限制。
 - 节点需求：客户分为送货（linehaul）和取货（backhaul）两类，需求通过均匀采样生成。对于所有客户 $i \in \lbrace 1, 2, \cdots, N \rbrace$，先从整数集 $\lbrace 1, 2, \cdots, 9 \rbrace$ 中均匀采样生成送货需求 $\delta_i^l$，若未设置回程约束，节点的真实需求 $\delta_i$ 等于 $\delta_i^l$；若设置了回程约束，再从相同整数集中均匀采样生成取货需求 $\delta_i^b$，并通过临时变量 $y_i \sim U(0, 1)$ 确定节点需求，当 $y_i < 0.2$ 时才设置 $\delta_i = \delta_i^b$。为保证训练稳定性，将需求 $\delta_i$ 归一化到范围 $[0, 1]$，确保解码过程中剩余容量在合理范围内。
-- 时间窗口：对于含时间窗口约束的问题，需考虑时间窗口 $[e_i, l_i]$ 和服务时间 $s_i$。仓库的 $e_0 = s_0 = 0$，$l_0 = T = 4.6$（$T$ 为每个子路线的时间限制），车辆速度设为 $1.0$。对于客户节点 $i \in \lbrace 1, 2, \cdots, N \rbrace$，服务时间 $s_i$ 从 $[0.15, 0.18]$ 中均匀采样，时间窗口长度 $\Delta t_i$ 从 $[0.18, 0.20]$ 中均匀采样，且每个客户的时间窗口必须保证路线可行，否则无可行路线服务该客户。时间窗口的开始时间 $e_i$ 根据下列公式计算得到 $$\begin{align*} e_i^{up} &= \frac{T - s_i -\Delta t_i}{d_{0i}} - 1, \\ e_i = \ &(1 + (e_i^{up} - 1)\cdot y_i) \cdot d_{0i}, \end{align*}$$ 其中 $y_i \sim U(0, 1)$。而结束时间 $l_i = e_i + \Delta t_i$。
+- 时间窗口：对于含时间窗口约束的问题，需考虑时间窗口 $[e_i, l_i]$ 和服务时间 $s_i$。仓库的 $e_0 = s_0 = 0$，$l_0 = T = 4.6$（$T$ 为每个子路线的时间限制），车辆速度设为 $1.0$。对于客户节点 $i \in \lbrace 1, 2, \cdots, N \rbrace$，服务时间 $s_i$ 从 $[0.15, 0.18]$ 中均匀采样，时间窗口长度 $\Delta t_i$ 从 $[0.18, 0.20]$ 中均匀采样，且每个客户的时间窗口必须保证路线可行，否则无可行路线服务该客户。时间窗口的开始时间 $e_i$ 根据下列公式计算得到 <div align=center>$$\begin{align*} e_i^{up} &= \frac{T - s_i -\Delta t_i}{d_{0i}} - 1, \\ e_i = \ &(1 + (e_i^{up} - 1)\cdot y_i) \cdot d_{0i}, \\ \end{align*}$$</div> 其中 $y_i \sim U(0, 1)$。而结束时间 $l_i = e_i + \Delta t_i$。
 - 距离限制：对于含距离限制约束的问题，每个子路线长度需在限制 $\rho$ 内，为确保每个实例有可行解，$\rho$ 从 $U(2 \cdot \max(d_{0*}), \rho_{\max})$ 中采样，其中 $\rho_{\max} = 3.0$ 为预定义上限。
 
 #### 2. 基线方法选择
@@ -110,11 +110,12 @@ CaDA 遵循 VRP 的跨问题学习框架，包括编码和解码两个阶段。�
 
 **【Gap 和有些最佳 Obj. 疑似对不上，可能 arxiv 上不是终稿】**
 
-![Table3](../images/CaDA/Table3.png)
+<div align="center">
+    <img src="../images/CaDA/Table3.png" width=550>
+</div>
 
 <div align="center">
     <img src="../images/CaDA/Fig3.png" width=400>
-    </img>
 </div>
 
 ### 2. 消融实验分析
@@ -124,7 +125,6 @@ CaDA 遵循 VRP 的跨问题学习框架，包括编码和解码两个阶段。�
 
 <div align=center>
     <img src="../images/CaDA/Table4_and_Fig4.png" width=400>
-    </img>
 </div>
 
 ### 3. 不同设置对 CaDA 的影响分析
@@ -135,7 +135,6 @@ CaDA 遵循 VRP 的跨问题学习框架，包括编码和解码两个阶段。�
 
 <div align=center>
     <img src="../images/CaDA/Fig5_and_Fig6.png" width=400>
-    </img>
 </div>
 
 ### 4. 约束感知可视化分析
@@ -147,7 +146,6 @@ CaDA 遵循 VRP 的跨问题学习框架，包括编码和解码两个阶段。�
 
 <div align="center">
     <img src="../images/CaDA/Fig8.png" width=400>
-    </img>
 </div>
 
 ### 5. 真实数据集结果分析
@@ -157,12 +155,10 @@ CaDA 遵循 VRP 的跨问题学习框架，包括编码和解码两个阶段。�
 
 <div align="center">
     <img src="../images/CaDA/Table5.png" width=350>
-    </img>
 </div>
 
 <div align="center">
     <img src="../images/CaDA/Table6.png" width=550>
-    </img>
 </div>
 
 ## 五、总结
